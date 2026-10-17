@@ -4,6 +4,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import AdmZip from "npm:adm-zip@0.5";
 import { Buffer } from "node:buffer";
 import { GROUP_TO_PARTY } from "../_shared/parties.ts";
+import { GROUPES_POLITIQUES } from "../_shared/groupes-politiques.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -12,7 +13,6 @@ const supabase = createClient(
 
 Deno.serve(async () => {
   const url = "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip";
-  const organesUrl = "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes_divises/AMO40_deputes_actifs_mandats_actifs_organes_divises.json.zip";
 
   try {
     const response = await fetch(url);
@@ -20,36 +20,25 @@ Deno.serve(async () => {
     const buffer = Buffer.from(await response.arrayBuffer());
     const zip = new AdmZip(buffer);
 
-    const organesResponse = await fetch(organesUrl);
-    if (!organesResponse.ok) throw new Error(`Erreur téléchargement organes: HTTP ${organesResponse.status}`);
-    const organesBuffer = Buffer.from(await organesResponse.arrayBuffer());
-    const organesZip = new AdmZip(organesBuffer);
+    const groupesMap = GROUPES_POLITIQUES;
 
-    // Mapping POxxxx -> informations du groupe.
-    const groupesMap: Record<string, { nom: string; abreviation: string | null }> = {};
-
-    for (const entry of organesZip.getEntries()) {
-      if (entry.isDirectory || !entry.entryName.startsWith("organe/") || !entry.entryName.endsWith(".json")) continue;
-      try {
-        const data = JSON.parse(entry.getData().toString("utf8"));
-        const organe = data.organe;
-        if (organe?.codeType === "GP") {
-          groupesMap[organe.uid] = {
-            nom: organe.libelle,
-            abreviation: organe.libelleAbrev || organe.libelleAbrege || null,
-          };
-        }
-      } catch (err) {
-        console.error(`Erreur organe ${entry.entryName}:`, (err as Error).message);
-      }
-    }
-
+    // L'archive contient ~9000 scrutins (~180 Mo décompressés) : décompresser tout
+    // dépasse la RAM d'une Edge Function. Le nom de fichier contient déjà le numéro
+    // (VTANR5L17V{numero}.json), on trie dessus et on ne décompresse que les 20 retenus.
     const jsonEntries = zip.getEntries().filter(
       (entry) => !entry.isDirectory && entry.entryName.startsWith("json/") && entry.entryName.endsWith(".json"),
     );
 
+    const numeroFromName = (entryName: string) => {
+      const match = entryName.match(/V(\d+)\.json$/);
+      return match ? Number(match[1]) : -1;
+    };
+
+    jsonEntries.sort((a, b) => numeroFromName(b.entryName) - numeroFromName(a.entryName));
+    const topEntries = jsonEntries.slice(0, 20);
+
     const parsedScrutins: any[] = [];
-    for (const entry of jsonEntries) {
+    for (const entry of topEntries) {
       try {
         const data = JSON.parse(entry.getData().toString("utf8"));
         if (!data.scrutin) continue;
@@ -59,6 +48,8 @@ Deno.serve(async () => {
       }
     }
 
+    // Re-tri par date réelle sur les 20 scrutins décompressés (le numéro est un bon
+    // proxy pour présélectionner, mais la date exacte reste la source de vérité).
     parsedScrutins.sort((a, b) => {
       const dateComparison = new Date(b.dateScrutin).getTime() - new Date(a.dateScrutin).getTime();
       if (dateComparison !== 0) return dateComparison;
