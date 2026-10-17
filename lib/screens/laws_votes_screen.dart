@@ -1,6 +1,6 @@
-import 'package:app_politix/theme/app_theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lebonvote/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/hemicycle_visualizer.dart';
 
 class LawsVotesScreen extends StatelessWidget {
@@ -8,12 +8,12 @@ class LawsVotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('votes')
-          .orderBy('date', descending: true)
-          .limit(20)
-          .snapshots(),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: Supabase.instance.client
+          .from('votes')
+          .stream(primaryKey: ['numero'])
+          .order('date', ascending: false)
+          .limit(20),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -33,7 +33,7 @@ class LawsVotesScreen extends StatelessWidget {
           );
         }
 
-        final votes = snapshot.data?.docs ?? [];
+        final votes = snapshot.data ?? [];
 
         if (votes.isEmpty) {
           return const Center(
@@ -45,8 +45,7 @@ class LawsVotesScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           itemCount: votes.length,
           itemBuilder: (context, index) {
-            final data = votes[index].data();
-            return _VoteCard(data: data);
+            return _VoteCard(data: votes[index]);
           },
         );
       },
@@ -216,7 +215,7 @@ class _VoteCardState extends State<_VoteCard> {
           const Divider(height: 40, thickness: 1),
 
           Text(
-            'Source : Assemblée nationale (Données Firestore)',
+            'Source : Assemblée nationale',
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey.shade400,

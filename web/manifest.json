@@ -1,6 +1,6 @@
 {
-    "name": "app_politix",
-    "short_name": "app_politix",
+    "name": "LeBonVote",
+    "short_name": "LeBonVote",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -30,8 +30,8 @@ class AppTheme {
   static const Color voteAbstention = Color(0xFFF1C40F);
   static const Color voteAbsent = Color(0xFFD5D8DC);
 
-  // Dégradé bleu utilisé pour le logo "POLITIX"
-  static const List<Color> politixGradient = [
+  // Dégradé bleu utilisé pour le logo "LEBONVOTE"
+  static const List<Color> lebonvoteGradient = [
     Color(0xFF3D8BFF),
     Color(0xFF6C5CE7),
   ];

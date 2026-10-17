@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/party.dart';
 import '../models/party_representation.dart';
 import '../widgets/edge_swipe_back.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/news_webview.dart';
@@ -176,11 +176,11 @@ class _NewsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('news')
-          .where('partyId', isEqualTo: party.id)
-          .snapshots(),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: Supabase.instance.client
+          .from('news')
+          .stream(primaryKey: ['id'])
+          .eq('party_id', party.id),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -194,26 +194,11 @@ class _NewsTab extends StatelessWidget {
           );
         }
 
-        final articles = snapshot.data?.docs ?? [];
+        final articles = List<Map<String, dynamic>>.from(snapshot.data ?? []);
 
         articles.sort((a, b) {
-          final valA = a.data()['publishedAt'];
-          final valB = b.data()['publishedAt'];
-
-          DateTime dateTimeA;
-          if (valA is Timestamp) {
-            dateTimeA = valA.toDate();
-          } else {
-            dateTimeA = DateTime.tryParse(valA?.toString() ?? '') ?? DateTime(1970);
-          }
-
-          DateTime dateTimeB;
-          if (valB is Timestamp) {
-            dateTimeB = valB.toDate();
-          } else {
-            dateTimeB = DateTime.tryParse(valB?.toString() ?? '') ?? DateTime(1970);
-          }
-
+          final dateTimeA = DateTime.tryParse(a['published_at']?.toString() ?? '') ?? DateTime(1970);
+          final dateTimeB = DateTime.tryParse(b['published_at']?.toString() ?? '') ?? DateTime(1970);
           return dateTimeB.compareTo(dateTimeA);
         });
 
@@ -230,9 +215,9 @@ class _NewsTab extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           itemCount: articles.length,
           itemBuilder: (context, index) {
-            final article = articles[index].data();
+            final article = articles[index];
             final String? url = article['url'] as String?;
-            final String sourceName = article['sourceName'] ?? 'Source inconnue';
+            final String sourceName = article['source_name'] ?? 'Source inconnue';
             
             // Pour l'onglet parti, on a une seule source par carte
             final sources = [{'name': sourceName, 'url': url}];

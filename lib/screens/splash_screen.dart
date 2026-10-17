@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import 'main_navigation_screen.dart';
 
-// Écran de démarrage : anime le dépliement du mot "POLITIX" à partir du "P"
+// Écran de démarrage : anime le dépliement du mot "LeBonVote" à partir du "L"
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -13,10 +13,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _revealAnimation; // largeur révélée de "OLITIX"
-  late final Animation<double> _scaleAnimation; // léger effet de zoom sur le P au départ
+  late final Animation<double> _revealAnimation; // largeur révélée de "eBonVote"
+  late final Animation<double> _scaleAnimation; // léger effet de zoom sur le L au départ
 
-  static const String _remainingLetters = 'OLITIX';
+  static const String _remainingLetters = 'eBonVote';
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Center(
         child: ShaderMask(
           shaderCallback: (bounds) =>
-              LinearGradient(colors: AppTheme.politixGradient).createShader(bounds),
+              LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
           child: AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -93,8 +93,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('P', style: textStyle),
-                    // Révèle progressivement "OLITIX" en élargissant sa zone visible
+                    Text('L', style: textStyle),
+                    // Révèle progressivement "eBonVote" en élargissant sa zone visible
                     ClipRect(
                       child: Align(
                         alignment: Alignment.centerLeft,

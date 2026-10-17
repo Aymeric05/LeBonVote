@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.aymeric" "\0"
-            VALUE "FileDescription", "app_politix" "\0"
+            VALUE "FileDescription", "LeBonVote" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "app_politix" "\0"
+            VALUE "InternalName", "LeBonVote" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.aymeric. All rights reserved." "\0"
-            VALUE "OriginalFilename", "app_politix.exe" "\0"
-            VALUE "ProductName", "app_politix" "\0"
+            VALUE "OriginalFilename", "lebonvote.exe" "\0"
+            VALUE "ProductName", "LeBonVote" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

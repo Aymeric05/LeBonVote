@@ -20,6 +20,6 @@ workflows:
           mkdir -p build/ios/iphoneos/Payload
           cp -r build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/Runner.app
           cd build/ios/iphoneos
-          zip -r politix-unsigned.ipa Payload
+          zip -r lebonvote-unsigned.ipa Payload
     artifacts:
-      - build/ios/iphoneos/politix-unsigned.ipa
+      - build/ios/iphoneos/lebonvote-unsigned.ipa

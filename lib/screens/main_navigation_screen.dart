@@ -44,9 +44,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       appBar: AppBar(
         title: ShaderMask(
           shaderCallback: (bounds) =>
-              LinearGradient(colors: AppTheme.politixGradient).createShader(bounds),
+              LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
           child: Text(
-            'POLITIX',
+            'LEBONVOTE',
             style: GoogleFonts.poppins(
               fontSize: 26,
               fontWeight: FontWeight.w800,

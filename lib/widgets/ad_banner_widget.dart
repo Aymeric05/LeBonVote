@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -26,14 +26,15 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   Future<void> _initAndLoad() async {
     try {
-      // 1. Récupérer la configuration depuis Firestore
-      final adsSnapshot = await FirebaseFirestore.instance
-          .collection('config')
-          .doc('ads')
-          .get();
+      // 1. Récupérer la configuration depuis Supabase
+      final adsRow = await Supabase.instance.client
+          .from('config')
+          .select()
+          .eq('id', 'ads')
+          .maybeSingle();
 
       String adUnitId;
-      final Map<String, dynamic>? data = adsSnapshot.data();
+      final Map<String, dynamic>? data = adsRow?['data'] as Map<String, dynamic>?;
 
       // SÉCURITÉ : Si on est en mode Debug (développement), on force les pubs de TEST
       if (kDebugMode) {
@@ -41,8 +42,8 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
             ? 'ca-app-pub-3940256099942544/6300978111'
             : 'ca-app-pub-3940256099942544/2934735716';
         debugPrint('AdMob: Mode développement détecté. Affichage de publicités de TEST par sécurité.');
-      } 
-      else if (adsSnapshot.exists && data != null && data['showRealAds'] == true) {
+      }
+      else if (data != null && data['showRealAds'] == true) {
         // UTILISER LES PUBS RÉELLES (Uniquement en mode Release)
         if (defaultTargetPlatform == TargetPlatform.android) {
           adUnitId = data['androidBannerId'] ?? 'ca-app-pub-3940256099942544/6300978111';
@@ -50,20 +51,20 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
           adUnitId = 'ca-app-pub-3940256099942544/2934735716';
         }
         debugPrint('AdMob: Mode Production détecté. Affichage des publicités RÉELLES.');
-      } 
+      }
       else {
         // Fallback par défaut (TEST)
         adUnitId = defaultTargetPlatform == TargetPlatform.android
             ? 'ca-app-pub-3940256099942544/6300978111'
             : 'ca-app-pub-3940256099942544/2934735716';
-        debugPrint('AdMob: Configuration Firestore absente ou showRealAds=false. Mode TEST.');
+        debugPrint('AdMob: Configuration Supabase absente ou showRealAds=false. Mode TEST.');
       }
 
       // 2. Charger la bannière avec l'ID choisi
       _loadAd(adUnitId);
     } catch (e) {
-      debugPrint('AdMob: Erreur lors de la récupération de la config Firestore: $e');
-      // En cas d'erreur Firestore, on tente quand même de charger une pub de test
+      debugPrint('AdMob: Erreur lors de la récupération de la config Supabase: $e');
+      // En cas d'erreur, on tente quand même de charger une pub de test
       _loadAd('ca-app-pub-3940256099942544/6300978111');
     }
   }

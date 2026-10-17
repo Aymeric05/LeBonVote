@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/news_webview.dart';
@@ -28,10 +28,10 @@ class NewsFeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('newsClusters')
-          .snapshots(),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: Supabase.instance.client
+          .from('news_clusters')
+          .stream(primaryKey: ['id']),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -48,31 +48,25 @@ class NewsFeedScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        
-        final docs = snapshot.data?.docs ?? [];
-        
+
+        final docs = snapshot.data ?? [];
+
         if (docs.isEmpty) {
           return const Center(child: Text('Aucune actualité pour le moment.'));
         }
 
-        // Tri manuel en Dart pour éviter de dépendre d'un index Firestore composite
-        final sortedDocs = List.from(docs);
-        sortedDocs.sort((a, b) {
-          final dataA = a.data() as Map<String, dynamic>;
-          final dataB = b.data() as Map<String, dynamic>;
-
+        // Tri manuel en Dart pour éviter de dépendre d'un index composite
+        final sortedDocs = List<Map<String, dynamic>>.from(docs);
+        sortedDocs.sort((dataA, dataB) {
           // 1. Tri par nombre de sources (popularité)
-          final int countA = (dataA['sourceCount'] as num?)?.toInt() ?? 0;
-          final int countB = (dataB['sourceCount'] as num?)?.toInt() ?? 0;
+          final int countA = (dataA['source_count'] as num?)?.toInt() ?? 0;
+          final int countB = (dataB['source_count'] as num?)?.toInt() ?? 0;
           if (countB != countA) return countB.compareTo(countA);
 
           // 2. Tri par date (si égalité de sources)
-          final dateA = dataA['publishedAt'];
-          final dateB = dataB['publishedAt'];
-          
-          DateTime dtA = (dateA is Timestamp) ? dateA.toDate() : DateTime.tryParse(dateA?.toString() ?? '') ?? DateTime(0);
-          DateTime dtB = (dateB is Timestamp) ? dateB.toDate() : DateTime.tryParse(dateB?.toString() ?? '') ?? DateTime(0);
-          
+          final dtA = DateTime.tryParse(dataA['published_at']?.toString() ?? '') ?? DateTime(0);
+          final dtB = DateTime.tryParse(dataB['published_at']?.toString() ?? '') ?? DateTime(0);
+
           return dtB.compareTo(dtA);
         });
 
@@ -80,8 +74,8 @@ class NewsFeedScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           itemCount: sortedDocs.length,
           itemBuilder: (context, index) {
-            final data = sortedDocs[index].data() as Map<String, dynamic>;
-            final sourceCount = (data['sourceCount'] as num?)?.toInt() ?? 1;
+            final data = sortedDocs[index];
+            final sourceCount = (data['source_count'] as num?)?.toInt() ?? 1;
             final sources = (data['sources'] as List?) ?? [];
             final String? mainUrl = sources.isNotEmpty ? (sources[0]['url'] as String?) : null;
 
