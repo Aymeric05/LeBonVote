@@ -120,15 +120,17 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
       );
     }
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (_errorMessage.isNotEmpty) {
       return Container(
         width: double.infinity,
         height: 50,
-        color: Colors.grey.shade50,
+        color: colorScheme.surfaceContainerHighest,
         alignment: Alignment.center,
         child: Text(
           _errorMessage,
-          style: TextStyle(color: Colors.red.shade300, fontSize: 10),
+          style: TextStyle(color: colorScheme.error, fontSize: 10),
         ),
       );
     }
@@ -137,16 +139,16 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
       width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: colorScheme.surfaceContainerHighest,
         border: Border(
-          bottom: BorderSide(color: Colors.grey.shade200, width: 0.5),
+          bottom: BorderSide(color: colorScheme.outlineVariant, width: 0.5),
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
           "Chargement...",
           style: TextStyle(
-            color: Colors.grey,
+            color: colorScheme.onSurfaceVariant,
             fontSize: 10,
             fontWeight: FontWeight.w600,
           ),

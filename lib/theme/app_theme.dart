@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Classe statique regroupant les couleurs et le thème de l'app
 class AppTheme {
@@ -36,16 +37,48 @@ class AppTheme {
     Color(0xFF6C5CE7),
   ];
 
-  static ThemeData get lightTheme {
+  static ThemeData get lightTheme => _buildTheme(Brightness.light);
+
+  static ThemeData get darkTheme => _buildTheme(Brightness.dark);
+
+  static ThemeData _buildTheme(Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.indigo,
+      brightness: brightness,
+    );
+
     return ThemeData(
       useMaterial3: true,
-      colorSchemeSeed: Colors.indigo,
-      scaffoldBackgroundColor: const Color(0xFFF3F4F8),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+      brightness: brightness,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor:
+          isDark ? colorScheme.surface : const Color(0xFFF3F4F8),
+      textTheme: GoogleFonts.poppinsTextTheme(
+        ThemeData(brightness: brightness).textTheme,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: isDark ? colorScheme.surface : Colors.white,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: colorScheme.surfaceContainerLow,
+        elevation: 0,
+        shadowColor: colorScheme.shadow.withValues(alpha: 0.08),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineVariant,
+        thickness: 1,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: isDark ? colorScheme.surface : Colors.white,
+        selectedItemColor: colorScheme.primary,
+        unselectedItemColor: colorScheme.onSurfaceVariant,
       ),
     );
   }

@@ -37,7 +37,7 @@ class HemicycleVisualizer extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

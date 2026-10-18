@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'services/push_notifications.dart';
 import 'theme/app_theme.dart';
+import 'theme/theme_controller.dart';
 import 'screens/splash_screen.dart';
 
-// TODO: remplacer par l'URL et la clé publishable de ton projet Supabase
-// (Project Settings > API dans le dashboard Supabase).
 const supabaseUrl = 'https://wbkdhxzpmqocucfyqqjq.supabase.co';
 const supabasePublishableKey = 'sb_publishable_MxN3RtPEsagawym4WHiOaA_euIG8bAr';
+
+// TODO: remplacer par l'App ID de ton app OneSignal (onesignal.com > Settings > Keys & IDs).
+const oneSignalAppId = 'YOUR_ONESIGNAL_APP_ID';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(url: supabaseUrl, publishableKey: supabasePublishableKey);
+  await ThemeController.load();
+
+  await initPush(oneSignalAppId);
 
   // Initialisation non-bloquante pour éviter l'écran blanc au démarrage
   MobileAds.instance.initialize();
@@ -26,11 +32,18 @@ class PolitiqueFranceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'LeBonVote',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.mode,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          title: 'LeBonVote',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: mode,
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }

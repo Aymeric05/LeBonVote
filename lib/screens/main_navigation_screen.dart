@@ -40,6 +40,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: ShaderMask(
@@ -87,9 +88,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, -2)),
+              BoxShadow(color: colorScheme.shadow.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, -2)),
             ],
           ),
           child: Row(
@@ -103,7 +104,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   style: TextStyle(
                     fontSize: active ? 16 : 13.5,
                     fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                    color: active ? Colors.indigo : Colors.grey.shade400,
+                    color: active ? colorScheme.primary : colorScheme.onSurfaceVariant,
                   ),
                   child: Text(_tabTitles[index]),
                 ),

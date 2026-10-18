@@ -7,6 +7,7 @@ export const PARTIES = [
   { id: "ecologistes", name: "Les Écologistes", query: "Europe Écologie Les Verts", matchTerms: ["écologistes", "eelv", "europe écologie"] },
   { id: "pcf", name: "Parti Communiste Français", query: "Parti Communiste Français", matchTerms: ["parti communiste", " pcf "] },
   { id: "modem", name: "MoDem", query: "MoDem Bayrou", matchTerms: ["modem", "mouvement démocrate"] },
+  { id: "horizons", name: "Horizons", query: "Horizons Édouard Philippe parti", matchTerms: ["horizons", "édouard philippe"] },
   { id: "udr", name: "UDR", query: "Éric Ciotti UDR", matchTerms: [" udr ", "éric ciotti"] },
   { id: "reconquete", name: "Reconquête", query: "Reconquête Zemmour", matchTerms: ["reconquête"] },
 ];
@@ -20,6 +21,7 @@ export const GROUP_TO_PARTY: Record<string, string> = {
   DEM: "modem",
   EPR: "renaissance",
   UDR: "udr",
+  HOR: "horizons",
 };
 
 // Normalise un texte : minuscules, sans accents, entouré d'espaces pour matcher les mots isolés.

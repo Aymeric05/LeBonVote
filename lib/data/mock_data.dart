@@ -116,6 +116,7 @@ class MockData {
       shortDescription: 'Mouvement de gauche radicale fondé par Jean-Luc Mélenchon.',
       leader: 'Jean-Luc Mélenchon (fondateur), Manuel Bompard (coordinateur)',
       leaderImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/88/JLM_EP_2016_%28cropped%29.jpg',
+      candidate2027: 'Jean-Luc Mélenchon',
       keyFigures: ['Jean-Luc Mélenchon', 'Manuel Bompard', 'Mathilde Panot'],
       foundedYear: '2016',
       representation: const PartyRepresentation(
@@ -155,6 +156,7 @@ class MockData {
       shortDescription: 'Parti historique de la gauche française, social-démocrate.',
       leader: 'Olivier Faure',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGqThpJt6rkQSfJLb7CzgwWiWbbVstzHjcnXY0raY-jAXFgsBiB_ROw1lzJ8EmpoYpO_75zcA8w1WtCN1iFdxjKJvwC3mkwaB7HqV2Nope&s=10',
+      candidate2027: 'Raphaël Glucksmann (désigné par la primaire socialiste)',
       keyFigures: ['Olivier Faure', 'Raphaël Glucksmann'],
       foundedYear: '1969',
       representation: const PartyRepresentation(
@@ -189,6 +191,7 @@ class MockData {
       shortDescription: 'Parti écologiste de gauche, ex-Europe Écologie Les Verts.',
       leader: 'Marine Tondelier',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqkyTQJuOrGmxOQJpr00z5sJtRz4xqLcQ8FndoU6UA&s=10',
+      candidate2027: 'Marine Tondelier',
       keyFigures: ['Marine Tondelier'],
       foundedYear: '1984',
       representation: const PartyRepresentation(
@@ -220,6 +223,7 @@ class MockData {
       shortDescription: 'Parti historique de la gauche ouvrière et républicaine.',
       leader: 'Fabien Roussel',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOTkIw1dUiXLWksRPzZlJusLjo8OXlUVb2r-rHqSo0KTrH-_KYCM4GleFiookG381IKyYUAPDE1THulTW0w-asrpPMGKsmeLztdTh3SChv&s=10',
+      candidate2027: 'Fabien Roussel',
       keyFigures: ['Fabien Roussel'],
       foundedYear: '1920',
       representation: const PartyRepresentation(
@@ -253,6 +257,7 @@ class MockData {
       shortDescription: 'Parti centriste fondé par Emmanuel Macron.',
       leader: 'Gabriel Attal',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwK3Av2izSUQRGL3mmRccm8-U_qHJTeTfPIAjuPrpvEWLpOg7WhTzSjBCJnUnKw-15ObqevsGczwv1hO0ieWodsx3e18_EqQSmFwOrK7Cm4Q&s=10',
+      candidate2027: 'Gabriel Attal',
       keyFigures: ['Emmanuel Macron', 'Gabriel Attal'],
       foundedYear: '2016',
       representation: const PartyRepresentation(
@@ -284,6 +289,7 @@ class MockData {
       shortDescription: 'Parti centriste et démocrate-chrétien, allié de Renaissance.',
       leader: 'François Bayrou',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThbfiUDhwx3LvtN1YDgFd7rxL4Fq2tbvc4nJYzw9OslA&s',
+      candidate2027: 'Jean-Noël Barrot (pressenti)',
       keyFigures: ['François Bayrou'],
       foundedYear: '2007',
       representation: const PartyRepresentation(
@@ -305,6 +311,36 @@ class MockData {
           "Renaissance. François Bayrou a occupé la fonction de Premier ministre en 2024-2025.",
       sources: ['Wikipédia', 'Site officiel du MoDem'],
     ),
+    Party(
+      id: 'horizons',
+      name: 'Horizons',
+      orientationId: 'centre',
+      shortDescription: 'Parti centriste fondé par Édouard Philippe, allié de la majorité.',
+      leader: 'Édouard Philippe',
+      leaderImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/%C3%89douard_Philippe_in_2020.jpg',
+      candidate2027: 'Édouard Philippe',
+      keyFigures: ['Édouard Philippe'],
+      foundedYear: '2021',
+      representation: const PartyRepresentation(
+        deputies: 35,
+        senators: 12,
+        euroDeputies: 0,
+        deptPresidents: 1,
+        regPresidents: 0,
+        largeCityMayors: 6,
+      ),
+      historySummary:
+      "Horizons est un parti centriste fondé par Édouard Philippe, ancien Premier ministre "
+          "d'Emmanuel Macron, allié de la majorité présidentielle depuis sa création.",
+      historyRoots:
+      "Fondé en octobre 2021 par Édouard Philippe, alors maire du Havre, pour peser au sein "
+          "de la coalition présidentielle sans se fondre dans Renaissance.",
+      historyDetails:
+      "Horizons soutient les gouvernements Macron tout en gardant une ligne distincte, plus "
+          "marquée à droite sur certains sujets (retraites, dette publique). Édouard Philippe a "
+          "annoncé sa candidature à l'élection présidentielle de 2027.",
+      sources: ['Wikipédia', 'Site officiel Horizons'],
+    ),
 
     // ---------- DROITE ----------
     Party(
@@ -314,6 +350,7 @@ class MockData {
       shortDescription: 'Parti de droite issu du gaullisme et du libéralisme.',
       leader: 'Bruno Retailleau',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlnn2kRIaWsU3UJBgBgXG8dbbwUU3G1JhzGroUhAf99A&s',
+      candidate2027: 'Bruno Retailleau',
       keyFigures: ['Bruno Retailleau', 'Laurent Wauquiez'],
       foundedYear: '2015',
       representation: const PartyRepresentation(
@@ -376,6 +413,7 @@ class MockData {
       shortDescription: 'Premier parti à l\'Assemblée nationale depuis 2024, ligne nationaliste.',
       leader: 'Jordan Bardella',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROt3Eb47oQiDFEJUavIz6YpHw8ef4YETS0pvTJpgQO5Q&s',
+      candidate2027: 'Marine Le Pen',
       keyFigures: ['Marine Le Pen', 'Jordan Bardella'],
       foundedYear: '1972',
       representation: const PartyRepresentation(
@@ -409,6 +447,7 @@ class MockData {
       shortDescription: "Parti nationaliste fondé par Éric Zemmour.",
       leader: 'Éric Zemmour',
       leaderImageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjBxqwB61-kXbLVdz6I3hxOKuNGTWbxftasNlxSScA5A&s=10',
+      candidate2027: 'Éric Zemmour',
       keyFigures: ['Éric Zemmour', 'Marion Maréchal'],
       foundedYear: '2021',
       representation: const PartyRepresentation(

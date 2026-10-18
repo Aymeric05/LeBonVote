@@ -9,6 +9,7 @@ class Party {
   final String shortDescription; // phrase courte affichée sur la carte
   final String leader; // dirigeant actuel
   final String leaderImageUrl; // tête du dirigeant actuel
+  final String? candidate2027; // candidat déclaré/pressenti à la présidentielle 2027 (si distinct du leader)
   final List<String> keyFigures; // personnalités importantes
   final String foundedYear; // année de création
   final PartyRepresentation representation; // données de poids politique
@@ -26,6 +27,7 @@ class Party {
     required this.shortDescription,
     required this.leaderImageUrl,
     required this.leader,
+    this.candidate2027,
     required this.keyFigures,
     required this.foundedYear,
     required this.representation,

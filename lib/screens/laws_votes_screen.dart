@@ -68,6 +68,7 @@ class _VoteCardState extends State<_VoteCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final data = widget.data;
     final groupesRaw = data['groupes'] as List<dynamic>? ?? [];
 
@@ -83,11 +84,11 @@ class _VoteCardState extends State<_VoteCard> {
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: colorScheme.shadow.withValues(alpha: 0.06),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -100,7 +101,7 @@ class _VoteCardState extends State<_VoteCard> {
           Text(
             data['date'] ?? '',
             style: TextStyle(
-              color: Colors.grey.shade500,
+              color: colorScheme.onSurfaceVariant,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -111,11 +112,11 @@ class _VoteCardState extends State<_VoteCard> {
           // --- Titre du scrutin ---
           Text(
             data['titre'] ?? 'Scrutin',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
               height: 1.25,
-              color: Color(0xFF1A1C1E),
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -141,7 +142,7 @@ class _VoteCardState extends State<_VoteCard> {
           const SizedBox(height: 12),
 
           // --- Barre de résumé des totaux ---
-          _buildVoteSummaryBar(sortedGroupes),
+          _buildVoteSummaryBar(sortedGroupes, colorScheme),
 
           const SizedBox(height: 16),
 
@@ -157,14 +158,14 @@ class _VoteCardState extends State<_VoteCard> {
                     Text(
                       _isExpanded ? "Moins de détails" : "Détails par groupe",
                       style: TextStyle(
-                        color: Colors.grey.shade400,
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Icon(
                       _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                      color: Colors.grey.shade400,
+                      color: colorScheme.onSurfaceVariant,
                       size: 18,
                     ),
                   ],
@@ -199,10 +200,10 @@ class _VoteCardState extends State<_VoteCard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _voteMiniStat('POUR', pour, AppTheme.votePour),
-                          _voteMiniStat('CONTRE', contre, AppTheme.voteContre),
-                          _voteMiniStat('ABS.', abst, AppTheme.voteAbstention),
-                          _voteMiniStat('TOTAL', membres, Colors.blueGrey, isTotal: true),
+                          _voteMiniStat('POUR', pour, AppTheme.votePour, colorScheme),
+                          _voteMiniStat('CONTRE', contre, AppTheme.voteContre, colorScheme),
+                          _voteMiniStat('ABS.', abst, AppTheme.voteAbstention, colorScheme),
+                          _voteMiniStat('TOTAL', membres, colorScheme.onSurfaceVariant, colorScheme, isTotal: true),
                         ],
                       ),
                     ),
@@ -218,7 +219,7 @@ class _VoteCardState extends State<_VoteCard> {
             'Source : Assemblée nationale',
             style: TextStyle(
               fontSize: 11,
-              color: Colors.grey.shade400,
+              color: colorScheme.onSurfaceVariant,
               fontStyle: FontStyle.italic,
               letterSpacing: 0.3,
             ),
@@ -256,7 +257,7 @@ class _VoteCardState extends State<_VoteCard> {
     );
   }
 
-  Widget _voteMiniStat(String label, int count, Color color, {bool isTotal = false}) {
+  Widget _voteMiniStat(String label, int count, Color color, ColorScheme colorScheme, {bool isTotal = false}) {
     return SizedBox(
       width: 45,
       child: Column(
@@ -267,7 +268,7 @@ class _VoteCardState extends State<_VoteCard> {
             style: TextStyle(
               fontSize: 8,
               fontWeight: FontWeight.w800,
-              color: isTotal ? Colors.blueGrey.shade400 : Colors.grey.shade500,
+              color: colorScheme.onSurfaceVariant,
               letterSpacing: 0.1,
             ),
           ),
@@ -277,7 +278,7 @@ class _VoteCardState extends State<_VoteCard> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w900,
-              color: isTotal ? Colors.blueGrey : (count > 0 ? color : Colors.grey.shade300),
+              color: isTotal || count > 0 ? color : colorScheme.outlineVariant,
             ),
           ),
         ],
@@ -285,7 +286,7 @@ class _VoteCardState extends State<_VoteCard> {
     );
   }
 
-  Widget _buildVoteSummaryBar(List<Map<String, dynamic>> sortedGroupes) {
+  Widget _buildVoteSummaryBar(List<Map<String, dynamic>> sortedGroupes, ColorScheme colorScheme) {
     int totalPour = 0;
     int totalContre = 0;
     int totalAbst = 0;
@@ -299,16 +300,16 @@ class _VoteCardState extends State<_VoteCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FB),
+        color: colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE9ECF1)),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Row(
         children: [
           _summarySection('POUR', totalPour, AppTheme.votePour),
-          Container(width: 1, height: 35, color: const Color(0xFFE9ECF1)),
+          Container(width: 1, height: 35, color: colorScheme.outlineVariant),
           _summarySection('ABST.', totalAbst, AppTheme.voteAbstention),
-          Container(width: 1, height: 35, color: const Color(0xFFE9ECF1)),
+          Container(width: 1, height: 35, color: colorScheme.outlineVariant),
           _summarySection('CONTRE', totalContre, AppTheme.voteContre),
         ],
       ),

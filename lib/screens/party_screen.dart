@@ -83,7 +83,7 @@ class _PartyScreenState extends State<PartyScreen> {
         style: TextStyle(
           fontSize: active ? 16 : 14,
           fontWeight: active ? FontWeight.bold : FontWeight.normal,
-          color: active ? widget.accentColor : Colors.grey.shade400,
+          color: active ? widget.accentColor : Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         child: Text(label),
       ),
@@ -120,6 +120,7 @@ class _NewsTab extends StatelessWidget {
 
   // Affiche la liste des sources dans une feuille modale
   void _showSourcesDialog(BuildContext context, List sources, String newsTitle) {
+    final primary = Theme.of(context).colorScheme.primary;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -149,15 +150,14 @@ class _NewsTab extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        const Icon(Icons.article_outlined,
-                            size: 20, color: Colors.indigo),
+                        Icon(Icons.article_outlined, size: 20, color: primary),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             source['name'] ?? 'Source inconnue',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.indigo,
+                                color: primary,
                                 decoration: TextDecoration.underline),
                           ),
                         ),
@@ -176,6 +176,7 @@ class _NewsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: Supabase.instance.client
           .from('news')
@@ -206,7 +207,7 @@ class _NewsTab extends StatelessWidget {
           return Center(
             child: Text(
               'Aucune actualité récente concernant ${party.name}.',
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(color: colorScheme.onSurfaceVariant),
             ),
           );
         }
@@ -232,14 +233,14 @@ class _NewsTab extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: accentColor.withValues(alpha: 0.15),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: colorScheme.shadow.withValues(alpha: 0.06),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -250,9 +251,10 @@ class _NewsTab extends StatelessWidget {
                   children: [
                     Text(
                       article['title'] ?? 'Actualité',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -260,7 +262,7 @@ class _NewsTab extends StatelessWidget {
                       Text(
                         article['description'],
                         style: TextStyle(
-                          color: Colors.grey.shade700,
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: 13,
                         ),
                       ),
@@ -313,6 +315,7 @@ class _RepresentationTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rep = party.representation;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return ListView(
       padding: const EdgeInsets.all(20),
@@ -359,7 +362,7 @@ class _RepresentationTab extends StatelessWidget {
         const SizedBox(height: 30),
         Text(
           "Source : Données officielles consolidées. Les chiffres peuvent varier selon les ralliements récents.",
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade500, fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant, fontStyle: FontStyle.italic),
         ),
       ],
     );
@@ -422,7 +425,7 @@ class _RepresentationBar extends StatelessWidget {
                 height: 12,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
@@ -497,6 +500,12 @@ class _HistoryTab extends StatelessWidget {
         Text(party.leader),
         const SizedBox(height: 20),
 
+        if (party.candidate2027 != null) ...[
+          _sectionTitle('Candidat 2027', accentColor),
+          Text(party.candidate2027!),
+          const SizedBox(height: 20),
+        ],
+
         _sectionTitle('Personnalités importantes', accentColor),
         ...party.keyFigures.map((f) => Text('• $f')),
         const SizedBox(height: 24),
@@ -505,7 +514,7 @@ class _HistoryTab extends StatelessWidget {
         ...party.sources.map(
               (s) => Padding(
             padding: const EdgeInsets.only(bottom: 4),
-            child: Text('• $s', style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+            child: Text('• $s', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
           ),
         ),
       ],

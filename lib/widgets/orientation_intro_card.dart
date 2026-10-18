@@ -18,6 +18,7 @@ class _OrientationIntroCardState extends State<OrientationIntroCard> {
   @override
   Widget build(BuildContext context) {
     final o = widget.orientation;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(14, 14, 14, 4),
@@ -59,7 +60,7 @@ class _OrientationIntroCardState extends State<OrientationIntroCard> {
                   ...o.sources.map(
                         (s) => Text(
                       '• $s',
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
                     ),
                   ),
                 ],
@@ -75,7 +76,7 @@ class _OrientationIntroCardState extends State<OrientationIntroCard> {
               icon: AnimatedRotation(
                 duration: const Duration(milliseconds: 250),
                 turns: _expanded ? 0.5 : 0,
-                child: Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade500),
+                child: Icon(Icons.keyboard_arrow_down, color: colorScheme.onSurfaceVariant),
               ),
             ),
           ),

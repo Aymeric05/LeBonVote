@@ -2,6 +2,7 @@
 // Planifiée toutes les 6h via pg_cron (voir supabase/migrations/0002_cron.sql).
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { PARTIES, isRelevantToParty } from "../_shared/parties.ts";
+import { sendPartyPush } from "../_shared/onesignal.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -41,7 +42,10 @@ Deno.serve(async () => {
       for (const article of data.news) {
         if (!isRelevantToParty(article, party)) continue;
 
-        const { error } = await supabase.from("news").upsert({
+        // ignoreDuplicates + select() : seules les lignes réellement insérées (pas les
+        // doublons déjà connus) reviennent dans `inserted`, ce qui sert à ne pousser une
+        // notif que pour les vrais nouveaux articles.
+        const { data: inserted, error } = await supabase.from("news").upsert({
           url: article.url,
           party_id: party.id,
           title: article.title,
@@ -49,9 +53,13 @@ Deno.serve(async () => {
           source_name: article.author || "Source inconnue",
           published_at: article.published ? new Date(article.published).toISOString() : new Date().toISOString(),
           fetched_at: new Date().toISOString(),
-        }, { onConflict: "url" });
+        }, { onConflict: "url", ignoreDuplicates: true }).select();
 
-        if (error) console.error(`Échec upsert news pour ${party.id}:`, error.message);
+        if (error) {
+          console.error(`Échec upsert news pour ${party.id}:`, error.message);
+        } else if (inserted && inserted.length > 0) {
+          await sendPartyPush(party.id, party.name, article.title, article.url);
+        }
       }
     } catch (err) {
       console.error(`Échec de récupération pour ${party.id}:`, (err as Error).message);

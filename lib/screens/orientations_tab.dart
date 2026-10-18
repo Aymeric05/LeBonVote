@@ -16,7 +16,7 @@ class OrientationsTab extends StatelessWidget {
           child: Text(
             "Partis se présentant à l'élection présidentielle de 2027",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12.5, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ),
         Expanded(

@@ -28,6 +28,7 @@ class NewsFeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: Supabase.instance.client
           .from('news_clusters')
@@ -40,7 +41,7 @@ class NewsFeedScreen extends StatelessWidget {
               child: Text(
                 'Erreur : ${snapshot.error}',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.red.shade700),
+                style: TextStyle(color: colorScheme.error),
               ),
             ),
           );
@@ -89,10 +90,10 @@ class NewsFeedScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3)),
+                    BoxShadow(color: colorScheme.shadow.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3)),
                   ],
                 ),
                 child: Column(
@@ -100,7 +101,7 @@ class NewsFeedScreen extends StatelessWidget {
                   children: [
                     Text(data['title'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     const SizedBox(height: 6),
-                    Text(data['description'] ?? '', style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                    Text(data['description'] ?? '', style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13)),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -122,8 +123,8 @@ class NewsFeedScreen extends StatelessWidget {
                                 Text(
                                   '$sourceCount source${sourceCount > 1 ? 's' : ''}',
                                   style: TextStyle(
-                                    fontSize: 11.5, 
-                                    color: Colors.indigo,
+                                    fontSize: 11.5,
+                                    color: colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                   ),
@@ -146,6 +147,7 @@ class NewsFeedScreen extends StatelessWidget {
 
   // Affiche la liste des sources dans une feuille modale
   void _showSourcesDialog(BuildContext context, List sources, String newsTitle) {
+    final primary = Theme.of(context).colorScheme.primary;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -173,12 +175,12 @@ class NewsFeedScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        const Icon(Icons.article_outlined, size: 20, color: Colors.indigo),
+                        Icon(Icons.article_outlined, size: 20, color: primary),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             source['name'] ?? 'Source inconnue',
-                            style: const TextStyle(fontSize: 14, color: Colors.indigo, decoration: TextDecoration.underline),
+                            style: TextStyle(fontSize: 14, color: primary, decoration: TextDecoration.underline),
                           ),
                         ),
                       ],
