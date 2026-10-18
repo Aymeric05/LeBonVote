@@ -10,8 +10,7 @@ import 'screens/splash_screen.dart';
 const supabaseUrl = 'https://wbkdhxzpmqocucfyqqjq.supabase.co';
 const supabasePublishableKey = 'sb_publishable_MxN3RtPEsagawym4WHiOaA_euIG8bAr';
 
-// TODO: remplacer par l'App ID de ton app OneSignal (onesignal.com > Settings > Keys & IDs).
-const oneSignalAppId = 'YOUR_ONESIGNAL_APP_ID';
+const oneSignalAppId = '9ec91cfb-a1f5-4009-b9e8-969d6f589d18';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
