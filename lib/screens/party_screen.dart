@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/party.dart';
 import '../models/party_representation.dart';
@@ -317,6 +318,19 @@ class _RepresentationTab extends StatelessWidget {
     final rep = party.representation;
     final colorScheme = Theme.of(context).colorScheme;
 
+    if (rep == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            'Données de représentation non renseignées pour ce parti.',
+            style: TextStyle(color: colorScheme.onSurfaceVariant),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
@@ -469,32 +483,41 @@ class _HistoryTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        // Résumé court en tête (3-4 lignes)
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: accentColor.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+        // Résumé court en tête (3-4 lignes), si disponible (absent pour les
+        // partis découverts automatiquement, pas encore de fiche rédigée)
+        if (party.historySummary != null) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+            ),
+            child: Text(
+              party.historySummary!,
+              style: const TextStyle(fontSize: 14.5, height: 1.4),
+            ),
           ),
-          child: Text(
-            party.historySummary,
-            style: const TextStyle(fontSize: 14.5, height: 1.4),
-          ),
-        ),
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
+        ],
 
-        _sectionTitle('Racines', accentColor),
-        Text(party.historyRoots, style: const TextStyle(height: 1.5)),
-        const SizedBox(height: 20),
+        if (party.historyRoots != null) ...[
+          _sectionTitle('Racines', accentColor),
+          Text(party.historyRoots!, style: const TextStyle(height: 1.5)),
+          const SizedBox(height: 20),
+        ],
 
-        _sectionTitle('Histoire et idées', accentColor),
-        Text(party.historyDetails, style: const TextStyle(height: 1.5)),
-        const SizedBox(height: 20),
+        if (party.historyDetails != null) ...[
+          _sectionTitle('Histoire et idées', accentColor),
+          Text(party.historyDetails!, style: const TextStyle(height: 1.5)),
+          const SizedBox(height: 20),
+        ],
 
-        _sectionTitle('Fondation', accentColor),
-        Text('Fondé en ${party.foundedYear}'),
-        const SizedBox(height: 20),
+        if (party.foundedYear != null) ...[
+          _sectionTitle('Fondation', accentColor),
+          Text('Fondé en ${party.foundedYear}'),
+          const SizedBox(height: 20),
+        ],
 
         _sectionTitle('Dirigeant(s)', accentColor),
         Text(party.leader),
@@ -502,21 +525,36 @@ class _HistoryTab extends StatelessWidget {
 
         if (party.candidate2027 != null) ...[
           _sectionTitle('Candidat 2027', accentColor),
-          Text(party.candidate2027!),
+          Row(
+            children: [
+              if (party.candidateImageUrl != null) ...[
+                CircleAvatar(
+                  radius: 18,
+                  backgroundImage: CachedNetworkImageProvider(party.candidateImageUrl!),
+                ),
+                const SizedBox(width: 10),
+              ],
+              Expanded(child: Text(party.candidate2027!)),
+            ],
+          ),
           const SizedBox(height: 20),
         ],
 
-        _sectionTitle('Personnalités importantes', accentColor),
-        ...party.keyFigures.map((f) => Text('• $f')),
-        const SizedBox(height: 24),
+        if (party.keyFigures.isNotEmpty) ...[
+          _sectionTitle('Personnalités importantes', accentColor),
+          ...party.keyFigures.map((f) => Text('• $f')),
+          const SizedBox(height: 24),
+        ],
 
-        _sectionTitle('Sources', accentColor),
-        ...party.sources.map(
-              (s) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Text('• $s', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
+        if (party.sources.isNotEmpty) ...[
+          _sectionTitle('Sources', accentColor),
+          ...party.sources.map(
+                (s) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text('• $s', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

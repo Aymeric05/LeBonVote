@@ -15,6 +15,17 @@ class PartyRepresentation {
     required this.largeCityMayors,
   });
 
+  factory PartyRepresentation.fromMap(Map<String, dynamic> map) {
+    return PartyRepresentation(
+      deputies: (map['deputies'] as num?)?.toInt() ?? 0,
+      senators: (map['senators'] as num?)?.toInt() ?? 0,
+      euroDeputies: (map['euroDeputies'] as num?)?.toInt() ?? 0,
+      deptPresidents: (map['deptPresidents'] as num?)?.toInt() ?? 0,
+      regPresidents: (map['regPresidents'] as num?)?.toInt() ?? 0,
+      largeCityMayors: (map['largeCityMayors'] as num?)?.toInt() ?? 0,
+    );
+  }
+
   // Totaux institutionnels en France
   static const int totalDeputies = 577;
   static const int totalSenators = 348;

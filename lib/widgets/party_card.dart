@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/party.dart';
 
@@ -36,8 +37,13 @@ class PartyCard extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           radius: 24,
-          backgroundImage: NetworkImage(party.leaderImageUrl),
           backgroundColor: accentColor.withValues(alpha: 0.1),
+          backgroundImage: (party.leaderImageUrl != null && party.leaderImageUrl!.isNotEmpty)
+              ? CachedNetworkImageProvider(party.leaderImageUrl!)
+              : null,
+          child: (party.leaderImageUrl == null || party.leaderImageUrl!.isEmpty)
+              ? Icon(Icons.person, color: accentColor)
+              : null,
         ),
         title: Text(
           party.name,

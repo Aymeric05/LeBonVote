@@ -94,19 +94,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(_tabTitles.length, (index) {
               final bool active = _currentPage == index;
-              return GestureDetector(
-                onTap: () => _goToPage(index),
-                child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
-                  style: TextStyle(
-                    fontSize: active ? 16 : 13.5,
-                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                    color: active ? colorScheme.primary : colorScheme.onSurfaceVariant,
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => _goToPage(index),
+                  child: Center(
+                    child: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: TextStyle(
+                        fontSize: active ? 16 : 13.5,
+                        fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                        color: active ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                      ),
+                      child: Text(_tabTitles[index]),
+                    ),
                   ),
-                  child: Text(_tabTitles[index]),
                 ),
               );
             }),
