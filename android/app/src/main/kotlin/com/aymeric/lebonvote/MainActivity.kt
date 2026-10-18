@@ -1,4 +1,4 @@
-package com.aymeric.app_politix
+package com.aymeric.lebonvote
 
 import io.flutter.embedding.android.FlutterActivity
 
