@@ -85,34 +85,36 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            boxShadow: [
-              BoxShadow(color: colorScheme.shadow.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, -2)),
-            ],
-          ),
-          child: Row(
-            children: List.generate(_tabTitles.length, (index) {
-              final bool active = _currentPage == index;
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () => _goToPage(index),
-                  child: Center(
-                    child: AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 200),
-                      style: TextStyle(
-                        fontSize: active ? 16 : 13.5,
-                        fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                        color: active ? colorScheme.primary : colorScheme.onSurfaceVariant,
+        child: SizedBox(
+          height: 64,
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              boxShadow: [
+                BoxShadow(color: colorScheme.shadow.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, -2)),
+              ],
+            ),
+            child: Row(
+              children: List.generate(_tabTitles.length, (index) {
+                final bool active = _currentPage == index;
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => _goToPage(index),
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: TextStyle(
+                          fontSize: active ? 16 : 13.5,
+                          fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                          color: active ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                        ),
+                        child: Text(_tabTitles[index]),
                       ),
-                      child: Text(_tabTitles[index]),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+            ),
           ),
         ),
       ),

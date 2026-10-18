@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,7 +22,9 @@ Future<void> main() async {
   await initPush(oneSignalAppId);
 
   // Initialisation non-bloquante pour éviter l'écran blanc au démarrage
-  MobileAds.instance.initialize();
+  if (!kIsWeb) {
+    MobileAds.instance.initialize();
+  }
 
   runApp(const PolitiqueFranceApp());
 }
