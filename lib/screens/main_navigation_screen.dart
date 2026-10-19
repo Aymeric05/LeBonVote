@@ -47,7 +47,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           shaderCallback: (bounds) =>
               LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
           child: Text(
-            'LEBONVOTE',
+            'LeBonVote',
             style: GoogleFonts.poppins(
               fontSize: 26,
               fontWeight: FontWeight.w800,
