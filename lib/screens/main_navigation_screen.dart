@@ -46,7 +46,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         title: Builder(
           builder: (context) {
             final baseStyle = GoogleFonts.poppins(
-              fontSize: 26,
+              fontSize: 28,
               fontWeight: FontWeight.w800,
               letterSpacing: 1.5,
             );
@@ -63,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     style: baseStyle.copyWith(
                       foreground: Paint()
                         ..style = PaintingStyle.stroke
-                        ..strokeWidth = 1.4
+                        ..strokeWidth = 2
                         ..color = Colors.black,
                     ),
                   ),
