@@ -8,10 +8,11 @@ import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/news_webview.dart';
 
-// Écran d'un parti politique : trois volets accessibles par swipe horizontal
-// - Page 0 : News (actualités du parti)
-// - Page 1 : Représentation (force politique actuelle)
+// Écran d'un parti politique : quatre volets accessibles par swipe horizontal
+// - Page 0 : Représentation (force politique actuelle) — affiché par défaut
+// - Page 1 : Programme (positions du parti)
 // - Page 2 : Histoire (racines, histoire, idées, sources)
+// - Page 3 : News (actualités du parti)
 class PartyScreen extends StatefulWidget {
   final Party party;
   final Color accentColor;
@@ -49,11 +50,13 @@ class _PartyScreenState extends State<PartyScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _tabLabel('NEWS', 0),
-                  const SizedBox(width: 18),
-                  _tabLabel('Représentation', 1),
-                  const SizedBox(width: 18),
+                  _tabLabel('Représentation', 0),
+                  const SizedBox(width: 14),
+                  _tabLabel('Programme', 1),
+                  const SizedBox(width: 14),
                   _tabLabel('Histoire', 2),
+                  const SizedBox(width: 14),
+                  _tabLabel('NEWS', 3),
                 ],
               ),
             ),
@@ -62,9 +65,10 @@ class _PartyScreenState extends State<PartyScreen> {
                 controller: _pageController,
                 onPageChanged: (page) => setState(() => _currentPage = page),
                 children: [
-                  _NewsTab(party: widget.party, accentColor: widget.accentColor),
                   _RepresentationTab(party: widget.party, accentColor: widget.accentColor),
+                  _ProgramTab(party: widget.party, accentColor: widget.accentColor),
                   _HistoryTab(party: widget.party, accentColor: widget.accentColor),
+                  _NewsTab(party: widget.party, accentColor: widget.accentColor),
                 ],
               ),
             ),
@@ -389,6 +393,42 @@ class _RepresentationTab extends StatelessWidget {
         title.toUpperCase(),
         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: color, letterSpacing: 1.1),
       ),
+    );
+  }
+}
+
+// --- Onglet PROGRAMME ---
+class _ProgramTab extends StatelessWidget {
+  final Party party;
+  final Color accentColor;
+
+  const _ProgramTab({required this.party, required this.accentColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (party.programSummary == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            'Programme non renseigné pour ce parti.',
+            style: TextStyle(color: colorScheme.onSurfaceVariant),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          party.programSummary!,
+          style: const TextStyle(fontSize: 14.5, height: 1.5),
+        ),
+      ],
     );
   }
 }

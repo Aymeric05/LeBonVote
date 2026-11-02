@@ -87,6 +87,7 @@ Deno.serve(async () => {
 
   const candidates = parseDeclaredCandidates(wikitext);
   const curatedAlreadyUpdated = new Set<string>();
+  const discoveredSeenIds = new Set<string>();
   let updated = 0;
   let inserted = 0;
 
@@ -111,6 +112,7 @@ Deno.serve(async () => {
     const generic = isGenericLabel(candidate.partyWikiName);
     const id = generic ? slugify(candidate.name) : slugify(candidate.partyWikiName);
     const name = generic ? candidate.name : displayName(candidate.partyWikiName);
+    discoveredSeenIds.add(id);
 
     const { error } = await supabase.from("parties").upsert({
       id,
@@ -127,7 +129,36 @@ Deno.serve(async () => {
     if (!error) inserted++;
   }
 
+  // Un candidat curé peut se retirer sans qu'un autre ne prenne sa place sous
+  // le même alias Wikipédia : on vide alors sa fiche candidat (le parti reste,
+  // seule l'info "candidat 2027" redevient vide tant que personne n'est repris).
+  const unmatchedCuratedIds = Object.values(CURATED_PARTY_ALIASES).filter(
+    (id) => !curatedAlreadyUpdated.has(id),
+  );
+  if (unmatchedCuratedIds.length > 0) {
+    await supabase
+      .from("parties")
+      .update({ candidate_2027: null, candidate_image_url: null, updated_at: new Date().toISOString() })
+      .in("id", unmatchedCuratedIds);
+  }
+
+  // Un candidat découvert automatiquement (is_curated=false) qui a disparu de
+  // la page Wikipédia (retrait, fusion...) est supprimé plutôt que laissé
+  // comme une fiche obsolète indéfiniment.
+  let removed = 0;
+  const { data: staleRows } = await supabase
+    .from("parties")
+    .select("id")
+    .eq("is_curated", false);
+  const staleIds = (staleRows ?? [])
+    .map((r) => r.id as string)
+    .filter((id) => !discoveredSeenIds.has(id));
+  if (staleIds.length > 0) {
+    const { error } = await supabase.from("parties").delete().in("id", staleIds);
+    if (!error) removed = staleIds.length;
+  }
+
   return new Response(
-    `${candidates.length} candidats trouvés, ${updated} fiches curées mises à jour, ${inserted} partis découverts upsertés.`,
+    `${candidates.length} candidats trouvés, ${updated} fiches curées mises à jour, ${inserted} partis découverts upsertés, ${removed} fiches obsolètes supprimées.`,
   );
 });

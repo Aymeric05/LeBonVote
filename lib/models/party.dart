@@ -25,6 +25,8 @@ class Party {
   final String? historyDetails; // histoire détaillée, idées, évolution
   final List<String> sources; // sources citées pour cette fiche
 
+  final String? programSummary; // positions/programme du parti, absent pour les partis non curés
+
   const Party({
     required this.id,
     required this.name,
@@ -41,6 +43,7 @@ class Party {
     this.historyRoots,
     this.historyDetails,
     this.sources = const [],
+    this.programSummary,
   });
 
   factory Party.fromMap(Map<String, dynamic> map) {
@@ -61,6 +64,7 @@ class Party {
       historyRoots: map['history_roots'] as String?,
       historyDetails: map['history_details'] as String?,
       sources: (map['sources'] as List?)?.cast<String>() ?? const [],
+      programSummary: map['program_summary'] as String?,
     );
   }
 }
