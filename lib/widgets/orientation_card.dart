@@ -125,12 +125,14 @@ class _OrientationCardState extends State<OrientationCard> {
                           child: Text(
                             _wrapName(orientation.name),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               height: 1.15,
-                              shadows: [Shadow(color: Colors.black26, blurRadius: 3, offset: Offset(0, 1))],
+                              shadows: [
+                                Shadow(color: Colors.black.withValues(alpha: 0.55), blurRadius: 6, offset: const Offset(0, 2)),
+                              ],
                             ),
                           ),
                         ),
