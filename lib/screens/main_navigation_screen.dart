@@ -63,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     style: baseStyle.copyWith(
                       foreground: Paint()
                         ..style = PaintingStyle.stroke
-                        ..strokeWidth = 2
+                        ..strokeWidth = 2.6
                         ..color = Colors.black,
                     ),
                   ),
