@@ -8,11 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/news_webview.dart';
 
-// Écran d'un parti politique : quatre volets accessibles par swipe horizontal
+// Écran d'un parti politique : trois volets accessibles par swipe horizontal
 // - Page 0 : Représentation (force politique actuelle) — affiché par défaut
-// - Page 1 : Programme (positions du parti)
-// - Page 2 : Histoire (racines, histoire, idées, sources)
-// - Page 3 : News (actualités du parti)
+// - Page 1 : Histoire (racines, histoire, idées, sources ; programme en tête)
+// - Page 2 : News (actualités du parti)
 class PartyScreen extends StatefulWidget {
   final Party party;
   final Color accentColor;
@@ -51,12 +50,10 @@ class _PartyScreenState extends State<PartyScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _tabLabel('Représentation', 0),
-                  const SizedBox(width: 14),
-                  _tabLabel('Programme', 1),
-                  const SizedBox(width: 14),
-                  _tabLabel('Histoire', 2),
-                  const SizedBox(width: 14),
-                  _tabLabel('NEWS', 3),
+                  const SizedBox(width: 18),
+                  _tabLabel('Histoire', 1),
+                  const SizedBox(width: 18),
+                  _tabLabel('NEWS', 2),
                 ],
               ),
             ),
@@ -66,7 +63,6 @@ class _PartyScreenState extends State<PartyScreen> {
                 onPageChanged: (page) => setState(() => _currentPage = page),
                 children: [
                   _RepresentationTab(party: widget.party, accentColor: widget.accentColor),
-                  _ProgramTab(party: widget.party, accentColor: widget.accentColor),
                   _HistoryTab(party: widget.party, accentColor: widget.accentColor),
                   _NewsTab(party: widget.party, accentColor: widget.accentColor),
                 ],
@@ -397,42 +393,6 @@ class _RepresentationTab extends StatelessWidget {
   }
 }
 
-// --- Onglet PROGRAMME ---
-class _ProgramTab extends StatelessWidget {
-  final Party party;
-  final Color accentColor;
-
-  const _ProgramTab({required this.party, required this.accentColor});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    if (party.programSummary == null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            'Programme non renseigné pour ce parti.',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Text(
-          party.programSummary!,
-          style: const TextStyle(fontSize: 14.5, height: 1.5),
-        ),
-      ],
-    );
-  }
-}
-
 // Widget de barre de représentation inspiré du visuel fourni
 class _RepresentationBar extends StatelessWidget {
   final String label;
@@ -523,6 +483,40 @@ class _HistoryTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
+        // Programme en tête, info majeure du parti. Dépliable au cas où le
+        // texte est long (absent pour les partis découverts automatiquement).
+        if (party.programSummary != null) ...[
+          Container(
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+            ),
+            child: Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                initiallyExpanded: true,
+                shape: const RoundedRectangleBorder(side: BorderSide.none),
+                title: Text(
+                  'Programme',
+                  style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.bold, color: accentColor),
+                ),
+                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      party.programSummary!,
+                      style: const TextStyle(fontSize: 14.5, height: 1.5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+
         // Résumé court en tête (3-4 lignes), si disponible (absent pour les
         // partis découverts automatiquement, pas encore de fiche rédigée)
         if (party.historySummary != null) ...[
