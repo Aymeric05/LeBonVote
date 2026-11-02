@@ -2,27 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/political_orientation.dart';
 import '../theme/app_theme.dart';
 
-// Icône évoquant chaque orientation sans symbole politique précis (reste neutre).
-IconData _iconFor(String orientationId) {
-  switch (orientationId) {
-    case 'extreme-gauche':
-      return Icons.bolt_rounded;
-    case 'gauche':
-      return Icons.eco_rounded;
-    case 'centre':
-      return Icons.balance_rounded;
-    case 'droite':
-      return Icons.shield_rounded;
-    case 'extreme-droite':
-      return Icons.flag_rounded;
-    default:
-      return Icons.diversity_3_rounded;
-  }
-}
-
 // Carte cliquable représentant une orientation politique (écran d'accueil).
-// Dégradé de couleur, icône, léger rebond au toucher pour un rendu plus
-// ludique et invitant qu'un simple bloc de texte.
+// Dégradé de couleur, léger rebond au toucher, titre centré pour un rendu
+// plus soigné qu'un simple bloc de texte aligné à gauche.
 class OrientationCard extends StatefulWidget {
   final PoliticalOrientation orientation;
   final VoidCallback onTap;
@@ -65,48 +47,26 @@ class _OrientationCardState extends State<OrientationCard> {
             ],
           ),
           padding: const EdgeInsets.all(16),
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Positioned(
-                top: -6,
-                right: -6,
-                child: Icon(
-                  _iconFor(orientation.id),
-                  size: 52,
-                  color: Colors.white.withValues(alpha: 0.18),
+              Text(
+                orientation.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1.1,
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.22),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(_iconFor(orientation.id), size: 16, color: Colors.white),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    orientation.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.05,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    orientation.description,
-                    style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.9), height: 1.25),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+              const SizedBox(height: 6),
+              Text(
+                orientation.description,
+                style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.9), height: 1.25),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

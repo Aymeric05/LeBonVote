@@ -43,44 +43,16 @@ class _PartyScreenState extends State<PartyScreen> {
         body: Column(
           children: [
             // --- Indicateur d'onglets NEWS / Représentation / Histoire ---
-            // "Histoire" (onglet du milieu) doit tomber pile au centre de
-            // l'écran, pas juste le groupe des 3 libellés : "Représentation"
-            // est bien plus long que "NEWS", donc centrer le groupe comme un
-            // bloc décale "Histoire" vers la droite. On compense avec un
-            // espace invisible du côté le plus court, calculé sur la largeur
-            // réelle du texte, pour que le bloc reste symétrique autour du
-            // centre tout en gardant les onglets serrés entre eux.
+            // L'écran est divisé en 3 colonnes égales, chaque titre centré
+            // dans la sienne (pas un groupe centré comme un seul bloc).
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Builder(
-                builder: (context) {
-                  const gap = 16.0;
-                  const style = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
-                  double textWidth(String text) {
-                    final painter = TextPainter(
-                      text: TextSpan(text: text, style: style),
-                      textDirection: TextDirection.ltr,
-                    )..layout();
-                    return painter.width;
-                  }
-
-                  final diff = textWidth('Représentation') - textWidth('NEWS');
-                  final leftPad = diff < 0 ? -diff : 0.0;
-                  final rightPad = diff > 0 ? diff : 0.0;
-
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(width: leftPad),
-                      _tabLabel('Représentation', 0),
-                      const SizedBox(width: gap),
-                      _tabLabel('Histoire', 1),
-                      const SizedBox(width: gap),
-                      _tabLabel('NEWS', 2),
-                      SizedBox(width: rightPad),
-                    ],
-                  );
-                },
+              child: Row(
+                children: [
+                  Expanded(child: Center(child: _tabLabel('Représentation', 0))),
+                  Expanded(child: Center(child: _tabLabel('Histoire', 1))),
+                  Expanded(child: Center(child: _tabLabel('NEWS', 2))),
+                ],
               ),
             ),
             Expanded(
@@ -514,25 +486,30 @@ class _HistoryTab extends StatelessWidget {
         // Programme en tête, info majeure du parti. Dépliable au cas où le
         // texte est long (absent pour les partis découverts automatiquement).
         if (party.programSummary != null) ...[
-          Container(
-            decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: accentColor.withValues(alpha: 0.3)),
-            ),
+          // Bandeau coloré (pas juste une bordure fine) pour que ce bloc se
+          // distingue clairement du résumé d'histoire juste en dessous.
+          // ClipRRect évite l'artefact de bordure/surbrillance qui dépassait
+          // du coin arrondi avec l'ancien Container+border.
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
             child: Theme(
               data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
                 initiallyExpanded: true,
                 shape: const RoundedRectangleBorder(side: BorderSide.none),
+                collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
+                backgroundColor: accentColor.withValues(alpha: 0.16),
+                collapsedBackgroundColor: accentColor.withValues(alpha: 0.16),
                 title: Text(
                   'Programme',
                   style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.bold, color: accentColor),
                 ),
                 childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
+                  Container(
+                    width: double.infinity,
+                    color: accentColor.withValues(alpha: 0.05),
+                    padding: const EdgeInsets.only(top: 12),
                     child: Text(
                       party.programSummary!,
                       style: const TextStyle(fontSize: 14.5, height: 1.5),
@@ -546,14 +523,22 @@ class _HistoryTab extends StatelessWidget {
         ],
 
         // Résumé court en tête (3-4 lignes), si disponible (absent pour les
-        // partis découverts automatiquement, pas encore de fiche rédigée)
+        // partis découverts automatiquement, pas encore de fiche rédigée).
+        // Carte neutre (pas de couleur d'accent) pour bien se distinguer du
+        // bloc Programme au-dessus, qui lui est volontairement coloré.
         if (party.historySummary != null) ...[
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.08),
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.06),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Text(
               party.historySummary!,

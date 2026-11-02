@@ -36,10 +36,13 @@ class AppTheme {
   // pour qu'une app censée être neutre n'emprunte pas la couleur d'un camp.
   static const Color brand = Color(0xFF6C5CE7);
 
-  // Dégradé violet utilisé pour le logo "LeBonVote"
+  // Dégradé tricolore (bleu-blanc-rouge, à parts égales) pour le logo texte
+  // "LeBonVote" — le violet `brand` ci-dessus reste la couleur d'accent du
+  // reste de l'app (boutons, onglet actif...), seul le mot-logo est tricolore.
   static const List<Color> lebonvoteGradient = [
-    Color(0xFF9B8CFF),
-    brand,
+    Color(0xFF0055A4),
+    Colors.white,
+    Color(0xFFEF4135),
   ];
 
   static ThemeData get lightTheme => _buildTheme(Brightness.light);

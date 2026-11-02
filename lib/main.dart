@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'services/push_notifications.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_controller.dart';
-import 'screens/splash_screen.dart';
+import 'screens/main_navigation_screen.dart';
 
 const supabaseUrl = 'https://wbkdhxzpmqocucfyqqjq.supabase.co';
 const supabasePublishableKey = 'sb_publishable_MxN3RtPEsagawym4WHiOaA_euIG8bAr';
@@ -43,7 +43,7 @@ class PolitiqueFranceApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: mode,
-          home: const SplashScreen(),
+          home: const MainNavigationScreen(),
         );
       },
     );

@@ -43,18 +43,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) =>
-              LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
-          child: Text(
-            'LeBonVote',
-            style: GoogleFonts.poppins(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-              letterSpacing: 1.5,
-            ),
-          ),
+        title: Builder(
+          builder: (context) {
+            final wordmark = ShaderMask(
+              shaderCallback: (bounds) =>
+                  LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
+              child: Text(
+                'LeBonVote',
+                style: GoogleFonts.poppins(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            );
+            // En thème clair, la partie blanche du dégradé se fond dans le
+            // fond clair de l'AppBar : une bulle sombre derrière le mot-logo
+            // le garde lisible, quel que soit le thème.
+            if (Theme.of(context).brightness != Brightness.light) return wordmark;
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.82),
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: wordmark,
+            );
+          },
         ),
         actions: [
           IconButton(
