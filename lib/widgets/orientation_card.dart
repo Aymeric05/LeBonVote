@@ -58,10 +58,12 @@ class _OrientationCardState extends State<OrientationCard> {
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // Hauteur fixe : même taille de bulle pour les 6 cases, que le
+              // nom tienne sur une ligne (Gauche) ou deux (Extrême gauche).
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                height: 64,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -77,7 +79,7 @@ class _OrientationCardState extends State<OrientationCard> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const Spacer(),
               Text(
                 orientation.description,
                 style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.9), height: 1.25),
