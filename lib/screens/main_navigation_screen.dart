@@ -45,30 +45,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       appBar: AppBar(
         title: Builder(
           builder: (context) {
-            final wordmark = ShaderMask(
-              shaderCallback: (bounds) =>
-                  LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
-              child: Text(
-                'LeBonVote',
-                style: GoogleFonts.poppins(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
-                ),
-              ),
+            final baseStyle = GoogleFonts.poppins(
+              fontSize: 26,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
             );
-            // En thème clair, la partie blanche du dégradé se fond dans le
-            // fond clair de l'AppBar : une bulle sombre derrière le mot-logo
-            // le garde lisible, quel que soit le thème.
-            if (Theme.of(context).brightness != Brightness.light) return wordmark;
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: wordmark,
+            final isLight = Theme.of(context).brightness == Brightness.light;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                // En thème clair, la partie blanche du dégradé se fond dans le
+                // fond clair de l'AppBar : un fin contour noir sur chaque
+                // lettre (texte en strokeWidth superposé) le garde lisible.
+                if (isLight)
+                  Text(
+                    'LeBonVote',
+                    style: baseStyle.copyWith(
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 1.4
+                        ..color = Colors.black,
+                    ),
+                  ),
+                ShaderMask(
+                  shaderCallback: (bounds) =>
+                      LinearGradient(colors: AppTheme.lebonvoteGradient).createShader(bounds),
+                  child: Text('LeBonVote', style: baseStyle.copyWith(color: Colors.white)),
+                ),
+              ],
             );
           },
         ),
