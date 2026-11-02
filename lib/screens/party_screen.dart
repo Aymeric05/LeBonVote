@@ -79,10 +79,10 @@ class _PartyScreenState extends State<PartyScreen> {
       onTap: () => _goToPage(page),
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 200),
-        // Taille fixe : ne pas faire grossir le libellé actif, sinon le groupe
-        // de 3 onglets change de largeur totale et se décentre selon l'onglet choisi.
+        // Chaque onglet est maintenant centré dans sa propre colonne (Expanded),
+        // donc agrandir l'actif ne décentre plus les autres.
         style: TextStyle(
-          fontSize: 15,
+          fontSize: active ? 17 : 15,
           fontWeight: active ? FontWeight.bold : FontWeight.normal,
           color: active ? widget.accentColor : Theme.of(context).colorScheme.onSurfaceVariant,
         ),

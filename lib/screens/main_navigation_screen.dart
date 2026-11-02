@@ -65,8 +65,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.82),
-                borderRadius: BorderRadius.circular(22),
+                color: Colors.black.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: wordmark,
             );
