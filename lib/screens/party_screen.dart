@@ -43,18 +43,44 @@ class _PartyScreenState extends State<PartyScreen> {
         body: Column(
           children: [
             // --- Indicateur d'onglets NEWS / Représentation / Histoire ---
-            // Groupe resserré centré sur l'écran (pas étalé sur toute la largeur).
+            // "Histoire" (onglet du milieu) doit tomber pile au centre de
+            // l'écran, pas juste le groupe des 3 libellés : "Représentation"
+            // est bien plus long que "NEWS", donc centrer le groupe comme un
+            // bloc décale "Histoire" vers la droite. On compense avec un
+            // espace invisible du côté le plus court, calculé sur la largeur
+            // réelle du texte, pour que le bloc reste symétrique autour du
+            // centre tout en gardant les onglets serrés entre eux.
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _tabLabel('Représentation', 0),
-                  const SizedBox(width: 16),
-                  _tabLabel('Histoire', 1),
-                  const SizedBox(width: 16),
-                  _tabLabel('NEWS', 2),
-                ],
+              child: Builder(
+                builder: (context) {
+                  const gap = 16.0;
+                  const style = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
+                  double textWidth(String text) {
+                    final painter = TextPainter(
+                      text: TextSpan(text: text, style: style),
+                      textDirection: TextDirection.ltr,
+                    )..layout();
+                    return painter.width;
+                  }
+
+                  final diff = textWidth('Représentation') - textWidth('NEWS');
+                  final leftPad = diff < 0 ? -diff : 0.0;
+                  final rightPad = diff > 0 ? diff : 0.0;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: leftPad),
+                      _tabLabel('Représentation', 0),
+                      const SizedBox(width: gap),
+                      _tabLabel('Histoire', 1),
+                      const SizedBox(width: gap),
+                      _tabLabel('NEWS', 2),
+                      SizedBox(width: rightPad),
+                    ],
+                  );
+                },
               ),
             ),
             Expanded(
