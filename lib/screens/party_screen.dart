@@ -40,19 +40,23 @@ class _PartyScreenState extends State<PartyScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.party.name),
+          // Compense visuellement la flèche retour (seule icône du bandeau) pour que
+          // le titre soit vraiment centré sur l'écran, pas juste dans l'espace restant.
+          actions: const [SizedBox(width: 48)],
         ),
         body: Column(
           children: [
             // --- Indicateur d'onglets NEWS / Représentation / Histoire ---
+            // Groupe resserré centré sur l'écran (pas étalé sur toute la largeur).
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _tabLabel('Représentation', 0),
-                  const SizedBox(width: 18),
+                  const SizedBox(width: 16),
                   _tabLabel('Histoire', 1),
-                  const SizedBox(width: 18),
+                  const SizedBox(width: 16),
                   _tabLabel('NEWS', 2),
                 ],
               ),
@@ -81,8 +85,10 @@ class _PartyScreenState extends State<PartyScreen> {
       onTap: () => _goToPage(page),
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 200),
+        // Taille fixe : ne pas faire grossir le libellé actif, sinon le groupe
+        // de 3 onglets change de largeur totale et se décentre selon l'onglet choisi.
         style: TextStyle(
-          fontSize: active ? 16 : 14,
+          fontSize: 15,
           fontWeight: active ? FontWeight.bold : FontWeight.normal,
           color: active ? widget.accentColor : Theme.of(context).colorScheme.onSurfaceVariant,
         ),

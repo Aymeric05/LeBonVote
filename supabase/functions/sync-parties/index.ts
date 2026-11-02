@@ -123,6 +123,9 @@ Deno.serve(async () => {
       candidate_2027: candidate.name,
       candidate_image_url: candidate.photoUrl,
       is_curated: false,
+      // Titre Wikipédia du parti (ou du candidat si générique/indépendant), pour
+      // que sync-party-programs puisse aller y chercher un programme plus tard.
+      wiki_page_title: generic ? candidate.name : candidate.partyWikiName,
       sources: [`https://fr.wikipedia.org/wiki/${encodeURIComponent(WIKI_PAGE)}`],
       updated_at: new Date().toISOString(),
     });
