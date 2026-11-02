@@ -12,7 +12,7 @@ class OrientationsTab extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 10),
           child: Text(
             "Partis se présentant à l'élection présidentielle de 2027",
             textAlign: TextAlign.center,
