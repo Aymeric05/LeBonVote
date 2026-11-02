@@ -5,6 +5,7 @@ import '../data/party_repository.dart';
 import '../models/party.dart';
 import '../services/push_notifications.dart';
 import '../widgets/edge_swipe_back.dart';
+import '../widgets/centered_app_bar.dart';
 
 String _prefsKey(String partyId) => 'notif_party_$partyId';
 
@@ -51,7 +52,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
     return EdgeSwipeBack(
       child: Scaffold(
-        appBar: AppBar(title: const Text('Notifications')),
+        appBar: CenteredAppBar(title: const Text('Notifications')),
         body: StreamBuilder<List<Party>>(
           stream: PartyRepository.watchAll(),
           builder: (context, snapshot) {

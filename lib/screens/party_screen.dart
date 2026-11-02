@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/party.dart';
 import '../models/party_representation.dart';
 import '../widgets/edge_swipe_back.dart';
+import '../widgets/centered_app_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,12 +39,7 @@ class _PartyScreenState extends State<PartyScreen> {
   Widget build(BuildContext context) {
     return EdgeSwipeBack(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.party.name),
-          // Compense visuellement la flèche retour (seule icône du bandeau) pour que
-          // le titre soit vraiment centré sur l'écran, pas juste dans l'espace restant.
-          actions: const [SizedBox(width: 48)],
-        ),
+        appBar: CenteredAppBar(title: Text(widget.party.name)),
         body: Column(
           children: [
             // --- Indicateur d'onglets NEWS / Représentation / Histoire ---

@@ -4,6 +4,7 @@ import '../models/party.dart';
 import '../models/political_orientation.dart';
 import '../widgets/party_card.dart';
 import '../widgets/edge_swipe_back.dart';
+import '../widgets/centered_app_bar.dart';
 import '../widgets/orientation_intro_card.dart';
 import 'party_screen.dart';
 
@@ -17,7 +18,7 @@ class OrientationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return EdgeSwipeBack(
       child: Scaffold(
-        appBar: AppBar(title: Text(orientation.name)),
+        appBar: CenteredAppBar(title: Text(orientation.name)),
         body: StreamBuilder<List<Party>>(
           stream: PartyRepository.watchByOrientation(orientation.id),
           builder: (context, snapshot) {

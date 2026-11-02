@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import './edge_swipe_back.dart';
+import './centered_app_bar.dart';
 
 class NewsWebView extends StatefulWidget {
   final String url;
@@ -46,7 +47,7 @@ class _NewsWebViewState extends State<NewsWebView> {
   Widget build(BuildContext context) {
     return EdgeSwipeBack(
       child: Scaffold(
-        appBar: AppBar(
+        appBar: CenteredAppBar(
           title: Text(widget.title, style: const TextStyle(fontSize: 14)),
           actions: [
             IconButton(

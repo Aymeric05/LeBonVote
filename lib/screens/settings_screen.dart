@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_controller.dart';
 import '../widgets/edge_swipe_back.dart';
+import '../widgets/centered_app_bar.dart';
 import 'notifications_screen.dart';
 
 // Écran des paramètres : accès aux réglages de notifications + choix du thème
@@ -11,7 +12,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return EdgeSwipeBack(
       child: Scaffold(
-        appBar: AppBar(title: const Text('Paramètres')),
+        appBar: CenteredAppBar(title: const Text('Paramètres')),
         body: ListView(
           children: [
             ListTile(
